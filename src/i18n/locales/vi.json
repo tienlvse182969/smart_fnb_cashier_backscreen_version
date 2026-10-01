@@ -1,0 +1,48 @@
+{
+  "display": {
+    "idle": {
+      "welcome": "Chào mừng quý khách",
+      "hint": "Thu ngân sẽ lên món cho bạn ngay"
+    },
+    "cart": {
+      "title": "Đơn của bạn",
+      "count": "{{lines}} món · {{cups}} phần",
+      "total": "Tổng cộng",
+      "hint": "Vui lòng kiểm tra lại đơn hàng. Thu ngân sẽ thu tiền sau khi bạn xác nhận.",
+      "note": "Ghi chú: {{note}}",
+      "other": "Khác"
+    },
+    "qr": {
+      "title": "Quét mã để thanh toán",
+      "amount": "Số tiền cần thanh toán",
+      "orderCode": "Mã đơn #{{code}}",
+      "expiresIn": "Mã hết hạn sau",
+      "expiringSoon": "Sắp hết hạn",
+      "step1": "Mở ứng dụng ngân hàng",
+      "step2": "Quét mã QR trên màn hình",
+      "step3": "Kiểm tra số tiền và xác nhận",
+      "moreLines": "+{{count}} món khác"
+    },
+    "expired": {
+      "title": "Mã QR đã hết hạn",
+      "hint": "Vui lòng chờ thu ngân hỗ trợ tạo mã mới."
+    },
+    "paid": {
+      "title": "Thanh toán thành công",
+      "callNumber": "Số gọi của bạn",
+      "hint": "Vui lòng chờ nhận món khi nghe gọi số.",
+      "amount": "Đã thanh toán {{amount}}"
+    },
+    "demo": {
+      "title": "Chế độ demo",
+      "addLine": "Thêm món",
+      "removeLine": "Bớt món",
+      "startQr": "Hiện QR",
+      "expire": "Hết hạn QR",
+      "paid": "Đã trả tiền",
+      "cancel": "Huỷ QR",
+      "clear": "Xoá giỏ",
+      "close": "Ẩn"
+    }
+  }
+}

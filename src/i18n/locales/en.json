@@ -1,0 +1,48 @@
+{
+  "display": {
+    "idle": {
+      "welcome": "Welcome",
+      "hint": "Our cashier will take your order right away"
+    },
+    "cart": {
+      "title": "Your order",
+      "count": "{{lines}} items · {{cups}} pcs",
+      "total": "Total",
+      "hint": "Please review your order. The cashier will collect payment once you confirm.",
+      "note": "Note: {{note}}",
+      "other": "Other"
+    },
+    "qr": {
+      "title": "Scan to pay",
+      "amount": "Amount due",
+      "orderCode": "Order #{{code}}",
+      "expiresIn": "Code expires in",
+      "expiringSoon": "Expiring soon",
+      "step1": "Open your banking app",
+      "step2": "Scan the QR code on screen",
+      "step3": "Check the amount and confirm",
+      "moreLines": "+{{count}} more"
+    },
+    "expired": {
+      "title": "QR code expired",
+      "hint": "Please wait for the cashier to generate a new code."
+    },
+    "paid": {
+      "title": "Payment successful",
+      "callNumber": "Your number",
+      "hint": "Please wait for your number to be called.",
+      "amount": "Paid {{amount}}"
+    },
+    "demo": {
+      "title": "Demo mode",
+      "addLine": "Add item",
+      "removeLine": "Remove item",
+      "startQr": "Show QR",
+      "expire": "Expire QR",
+      "paid": "Mark paid",
+      "cancel": "Cancel QR",
+      "clear": "Clear cart",
+      "close": "Hide"
+    }
+  }
+}

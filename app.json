@@ -1,12 +1,12 @@
 {
   "expo": {
-    "name": "my-app",
-    "slug": "my-app",
+    "name": "smart_fnb_backscreen",
+    "slug": "smart_fnb_backscreen",
     "version": "1.0.0",
-    "orientation": "portrait",
+    "orientation": "landscape",
     "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
-    "userInterfaceStyle": "automatic",
+    "scheme": "smartfnbbackscreen",
+    "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true
@@ -27,6 +27,16 @@
     },
     "plugins": [
       "expo-router",
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "./assets/fonts/HarmonyOS_Sans_Regular.ttf",
+            "./assets/fonts/HarmonyOS_Sans_Medium.ttf",
+            "./assets/fonts/HarmonyOS_Sans_Bold.ttf"
+          ]
+        }
+      ],
       [
         "expo-splash-screen",
         {
