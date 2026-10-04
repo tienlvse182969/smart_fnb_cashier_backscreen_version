@@ -11,6 +11,7 @@ import { fontFamily } from '@/src/theme/typography';
 import { useAppTheme } from '@/src/theme/use-theme';
 import { Icon } from '../ui/icon';
 import { Txt } from '../ui/txt';
+import { PosterSlideshow } from './poster-slideshow';
 
 /**
  * Chỉ in đậm tuỳ chọn khác mặc định (mục 12.4); Size đã hiện thành khung bên cạnh tên món.
@@ -48,14 +49,14 @@ function LineRow({ line }: { line: DisplayLine }) {
       <View
         style={[
           styles.row,
-          { borderBottomColor: theme.border_color_thin, paddingVertical: s(18), gap: s(20) },
+          { borderBottomColor: theme.border_color_thin, paddingVertical: s(16), gap: s(16) },
         ]}>
-      <View style={[styles.qty, { width: s(56), height: s(56), borderColor: theme.border_color_base }]}>
-        <Txt style={{ fontFamily: fontFamily.black, fontSize: s(26), lineHeight: s(32) }}>{line.qty}</Txt>
+      <View style={[styles.qty, { width: s(48), height: s(48), borderColor: theme.border_color_base }]}>
+        <Txt style={{ fontFamily: fontFamily.black, fontSize: s(22), lineHeight: s(28) }}>{line.qty}</Txt>
       </View>
       <View style={{ flex: 1, gap: s(4) }}>
-        <View style={[styles.nameRow, { gap: s(12) }]}>
-          <Txt style={{ fontFamily: fontFamily.bold, fontSize: s(26), lineHeight: s(32) }} numberOfLines={1}>
+        <View style={[styles.nameRow, { gap: s(10) }]}>
+          <Txt style={{ flexShrink: 1, fontFamily: fontFamily.bold, fontSize: s(22), lineHeight: s(28) }} numberOfLines={1}>
             {line.name}
           </Txt>
           {line.sizeLabel ? (
@@ -64,15 +65,15 @@ function LineRow({ line }: { line: DisplayLine }) {
             </View>
           ) : null}
         </View>
-        <OptionsLine line={line} size={s(16)} />
+        <OptionsLine line={line} size={s(15)} />
         {line.note ? (
           <Txt muted style={{ fontSize: s(15), lineHeight: s(22), fontStyle: 'italic' }}>
             {t('display.cart.note', { note: line.note })}
           </Txt>
         ) : null}
       </View>
-      <View style={{ alignItems: 'flex-end', minWidth: s(130) }}>
-        <Txt style={{ fontFamily: fontFamily.bold, fontSize: s(26), lineHeight: s(32) }}>
+      <View style={{ alignItems: 'flex-end', minWidth: s(100) }}>
+        <Txt style={{ fontFamily: fontFamily.bold, fontSize: s(22), lineHeight: s(28) }}>
           {formatVnd(line.qty * line.unitPrice)}
         </Txt>
         {line.qty > 1 ? (
@@ -87,8 +88,8 @@ function LineRow({ line }: { line: DisplayLine }) {
 }
 
 /**
- * Giỏ hàng thời gian thực (CS-01): hiện món khách đã yêu cầu thêm vào đơn trước khi thanh toán.
- * Trái = danh sách món; phải = tổng tiền cỡ lớn.
+ * Giỏ hàng thời gian thực (CS-01): hiện món thu ngân đã thêm vào đơn trước khi thanh toán.
+ * Trái = áp phích xoay vòng; phải = danh sách món + tổng tiền.
  */
 export function CartScreen({ cart }: { cart: CartSnapshot }) {
   const theme = useAppTheme();
@@ -106,49 +107,54 @@ export function CartScreen({ cart }: { cart: CartSnapshot }) {
   return (
     <View style={[styles.root, { backgroundColor: theme.fill_base }]}>
       <View style={styles.left}>
+        <PosterSlideshow />
+      </View>
+
+      <View style={[styles.right, { width: '44%', backgroundColor: theme.fill_base }]}>
         <View
           style={[
             styles.header,
-            { paddingHorizontal: s(48), paddingVertical: s(28), borderBottomColor: theme.border_color_base },
+            { paddingHorizontal: s(32), paddingVertical: s(24), borderBottomColor: theme.border_color_base },
           ]}>
-          <Icon name="cart" size={s(34)} />
-          <Txt style={{ fontFamily: fontFamily.black, fontSize: s(38), lineHeight: s(46) }}>
+          <Icon name="cart" size={s(30)} />
+          <Txt style={{ flex: 1, fontFamily: fontFamily.black, fontSize: s(32), lineHeight: s(40) }}>
             {t('display.cart.title')}
           </Txt>
+          <Image
+            source={require('../../../assets/logo/logo1.png')}
+            style={{ width: s(96), height: s(38) }}
+            contentFit="contain"
+          />
         </View>
-        <ScrollView ref={scroll} contentContainerStyle={{ paddingHorizontal: s(48), paddingBottom: s(32) }}>
+
+        <ScrollView ref={scroll} style={{ flex: 1 }} contentContainerStyle={{ paddingHorizontal: s(32), paddingBottom: s(24) }}>
           {cart.lines.map((line) => (
             <LineRow key={line.id} line={line} />
           ))}
         </ScrollView>
-      </View>
 
-      <View style={[styles.right, { width: '36%', padding: s(48) }]}>
-        <Image
-          source={require('../../../assets/logo/logo1_white.png')}
-          style={{ width: s(120), height: s(48), alignSelf: 'flex-start' }}
-          contentFit="contain"
-        />
-        <View style={{ gap: s(8) }}>
-          <Txt color={theme.color_text_base_inverse} muted style={{ fontSize: s(20), lineHeight: s(28) }}>
-            {t('display.cart.total')}
-          </Txt>
-          <Txt
-            color={theme.color_text_base_inverse}
-            adjustsFontSizeToFit
-            numberOfLines={1}
-            style={{ fontFamily: fontFamily.black, fontSize: s(76), lineHeight: s(88) }}>
-            {formatVnd(cart.total)}
-          </Txt>
-          <Txt color={theme.color_text_base_inverse} muted style={{ fontSize: s(18), lineHeight: s(26) }}>
-            {t('display.cart.count', { lines: cart.lines.length, cups })}
-          </Txt>
-        </View>
-        <View style={[styles.hint, { gap: s(14), paddingTop: s(24) }]}>
-          <Icon name="hourglass" size={s(26)} color={theme.color_text_base_inverse} />
-          <Txt color={theme.color_text_base_inverse} muted style={{ flex: 1, fontSize: s(17), lineHeight: s(25) }}>
-            {t('display.cart.hint')}
-          </Txt>
+        <View style={[styles.summary, { padding: s(32), gap: s(20) }]}>
+          <View style={{ gap: s(4) }}>
+            <Txt color={theme.color_text_base_inverse} muted style={{ fontSize: s(18), lineHeight: s(26) }}>
+              {t('display.cart.total')}
+            </Txt>
+            <Txt
+              color={theme.color_text_base_inverse}
+              adjustsFontSizeToFit
+              numberOfLines={1}
+              style={{ fontFamily: fontFamily.black, fontSize: s(60), lineHeight: s(70) }}>
+              {formatVnd(cart.total)}
+            </Txt>
+            <Txt color={theme.color_text_base_inverse} muted style={{ fontSize: s(16), lineHeight: s(24) }}>
+              {t('display.cart.count', { lines: cart.lines.length, cups })}
+            </Txt>
+          </View>
+          <View style={[styles.hint, { gap: s(12), paddingTop: s(16) }]}>
+            <Icon name="hourglass" size={s(22)} color={theme.color_text_base_inverse} />
+            <Txt color={theme.color_text_base_inverse} muted style={{ flex: 1, fontSize: s(15), lineHeight: s(22) }}>
+              {t('display.cart.hint')}
+            </Txt>
+          </View>
         </View>
       </View>
     </View>
@@ -164,7 +170,8 @@ const styles = StyleSheet.create({
   options: { flexDirection: 'row', flexWrap: 'wrap' },
   nameRow: { flexDirection: 'row', alignItems: 'center' },
   sizeTag: { borderWidth: 1.5, borderRadius: 6 },
-  right: { backgroundColor: '#0A0A0A', justifyContent: 'space-between' },
+  right: {},
+  summary: { backgroundColor: '#0A0A0A' },
   hint: {
     flexDirection: 'row',
     alignItems: 'flex-start',

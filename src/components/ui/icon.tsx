@@ -4,6 +4,9 @@ import {
   Clock,
   CupSoda,
   Hourglass,
+  Link2,
+  MonitorCheck,
+  MonitorSmartphone,
   QrCode,
   Receipt,
   ReceiptText,
@@ -11,6 +14,7 @@ import {
   Smartphone,
   Timer,
   UtensilsCrossed,
+  WifiOff,
   type LucideIcon,
 } from 'lucide-react-native';
 
@@ -29,6 +33,10 @@ export const Icons = {
   drink: CupSoda,
   hourglass: Hourglass,
   phone: Smartphone,
+  link: Link2,
+  monitor: MonitorSmartphone,
+  paired: MonitorCheck,
+  offline: WifiOff,
 } satisfies Record<string, LucideIcon>;
 
 export type IconName = keyof typeof Icons;

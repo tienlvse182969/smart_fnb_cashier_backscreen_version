@@ -42,7 +42,28 @@
       "paid": "Đã trả tiền",
       "cancel": "Huỷ QR",
       "clear": "Xoá giỏ",
-      "close": "Ẩn"
+      "close": "Ẩn",
+      "posEntersCode": "POS nhập đúng mã",
+      "expireCode": "Mã hết hạn",
+      "goOffline": "Mất mạng",
+      "goOnline": "Có mạng lại",
+      "revoke": "Thu hồi màn hình"
+    },
+    "pairing": {
+      "title": "Ghép màn hình với quầy",
+      "subtitle": "Nhập mã dưới đây trên máy POS của thu ngân",
+      "expiresIn": "Mã tự đổi sau {{time}}",
+      "requesting": "Đang lấy mã ghép…",
+      "offline": "Chưa kết nối được máy chủ",
+      "retrying": "Màn hình đang tự thử lại, vui lòng kiểm tra mạng Wi‑Fi.",
+      "revoked": "Màn hình này đã được gỡ khỏi quầy. Vui lòng ghép lại.",
+      "howTo": "Cách ghép",
+      "step1": "Trên máy POS, chạm “Màn hình khách” ở khung giỏ hàng",
+      "step2": "Nhập mã 6 số đang hiện trên màn hình này",
+      "step3": "Màn hình tự kết nối với quầy — không cần đăng nhập trên máy này",
+      "note": "Mã chỉ dùng một lần và tự đổi sau 5 phút. Ghép xong, mở lại ứng dụng không cần ghép lại.",
+      "successTitle": "Đã ghép thành công",
+      "successHint": "Màn hình sẽ chuyển sang chế độ chờ…"
     }
   }
 }
