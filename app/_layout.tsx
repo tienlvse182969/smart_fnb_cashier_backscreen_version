@@ -10,6 +10,7 @@ import 'react-native-reanimated';
 
 import '@/src/i18n';
 import { DisplayProvider } from '@/src/display/display-store';
+import { PairingProvider } from '@/src/pairing/pairing-store';
 import { harmonyFontMap } from '@/src/theme/harmony-fonts';
 import { AppThemeContext, appLightTheme } from '@/src/theme/use-theme';
 
@@ -27,6 +28,7 @@ export default function RootLayout() {
       <SafeAreaProvider>
         <AppThemeContext.Provider value={appLightTheme}>
           <AntdProvider theme={appLightTheme}>
+            <PairingProvider>
             <DisplayProvider>
               <Stack
                 screenOptions={{
@@ -37,6 +39,7 @@ export default function RootLayout() {
               </Stack>
               <StatusBar hidden />
             </DisplayProvider>
+            </PairingProvider>
           </AntdProvider>
         </AppThemeContext.Provider>
       </SafeAreaProvider>
