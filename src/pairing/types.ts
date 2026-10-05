@@ -1,13 +1,17 @@
+import type { DisplayBranding } from '@/src/services/display-api';
+
 /**
  * Ghép màn hình phía khách với quầy (đặc tả v9.1, mục 11.10, BR-45). Màn hình không đăng nhập
- * tài khoản: nó xin server một mã OTP 6 số, thu ngân nhập mã trên POS, server trả token thiết bị
- * về đúng kết nối đã xin mã. Tên sự kiện khớp bảng sự kiện ở 11.11.
+ * tài khoản: nó xin server một mã OTP 6 số kèm token thiết bị; token chỉ dùng được sau khi thu
+ * ngân nhập mã trên POS.
  */
 
-/** `pair:code` — thời điểm hết hạn là mốc tuyệt đối (epoch ms). */
+/** Mã đang hiện — thời điểm hết hạn là mốc tuyệt đối (epoch ms). */
 export type PairingCode = {
   code: string;
   expiresAt: number;
+  /** token server cấp cùng mã; dùng để hỏi xem thu ngân đã ghép chưa */
+  deviceToken: string;
 };
 
 /** Thông tin lưu trên máy sau khi ghép; mở lại app thì dùng lại, không phải ghép lại. */
@@ -16,6 +20,7 @@ export type PairedDevice = {
   stationId: string;
   stationName: string;
   branchName: string;
+  branding: DisplayBranding;
   pairedAt: number;
 };
 
@@ -26,6 +31,9 @@ export type PairingEvent =
   | { type: 'pair:code'; code: PairingCode }
   | { type: 'pair:success'; device: PairedDevice }
   | { type: 'pair:settled' }
+  /** xoá ghép ngay trên máy này */
+  | { type: 'display:unpaired' }
+  /** server không nhận token nữa (Manager thu hồi, máy khác ghép vào quầy, quầy ngừng dùng) */
   | { type: 'display:revoked' };
 
 export type PairingState =
@@ -36,7 +44,7 @@ export type PairingState =
       code?: PairingCode;
       /** chưa kết nối được server: màn hình tự thử lại */
       offline: boolean;
-      /** vừa bị Manager thu hồi hoặc máy khác ghép vào quầy */
+      /** vừa bị thu hồi khỏi quầy */
       revoked: boolean;
     }
   /** `justPaired` = đang hiện màn hình "Đã ghép" vài giây trước khi về màn hình chờ */

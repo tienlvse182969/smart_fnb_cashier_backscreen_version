@@ -10,6 +10,7 @@ import 'react-native-reanimated';
 
 import '@/src/i18n';
 import { DisplayProvider } from '@/src/display/display-store';
+import { StationSyncProvider } from '@/src/display/station-sync';
 import { PairingProvider } from '@/src/pairing/pairing-store';
 import { harmonyFontMap } from '@/src/theme/harmony-fonts';
 import { AppThemeContext, appLightTheme } from '@/src/theme/use-theme';
@@ -29,16 +30,18 @@ export default function RootLayout() {
         <AppThemeContext.Provider value={appLightTheme}>
           <AntdProvider theme={appLightTheme}>
             <PairingProvider>
-            <DisplayProvider>
-              <Stack
-                screenOptions={{
-                  headerShown: false,
-                  contentStyle: { backgroundColor: appLightTheme.fill_body },
-                }}>
-                <Stack.Screen name="index" />
-              </Stack>
-              <StatusBar hidden />
-            </DisplayProvider>
+              <DisplayProvider>
+                <StationSyncProvider>
+                  <Stack
+                    screenOptions={{
+                      headerShown: false,
+                      contentStyle: { backgroundColor: appLightTheme.fill_body },
+                    }}>
+                    <Stack.Screen name="index" />
+                  </Stack>
+                  <StatusBar hidden />
+                </StationSyncProvider>
+              </DisplayProvider>
             </PairingProvider>
           </AntdProvider>
         </AppThemeContext.Provider>

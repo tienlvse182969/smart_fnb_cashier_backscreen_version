@@ -5,7 +5,7 @@ import { StyleSheet, View } from 'react-native';
 
 import { formatVnd } from '@/src/data/format';
 import { useNow } from '@/src/data/use-now';
-import { QR_LIFETIME_MS, useDisplay } from '@/src/display/display-store';
+import { useDisplay } from '@/src/display/display-store';
 import type { CartSnapshot, QrPayment } from '@/src/display/types';
 import { useScale } from '@/src/theme/use-scale';
 import { fontFamily } from '@/src/theme/typography';
@@ -35,9 +35,10 @@ export function QrScreen({ payment, cart }: { payment: QrPayment; cart: CartSnap
 
   const remaining = payment.expiresAt - now;
   const warn = remaining <= WARN_MS;
-  const progress = Math.min(1, Math.max(0, remaining / QR_LIFETIME_MS));
+  const lifetime = Math.max(1, payment.expiresAt - payment.issuedAt);
+  const progress = Math.min(1, Math.max(0, remaining / lifetime));
 
-  // mock: tự báo hết hạn khi về 0 — bản thật do server gửi `payment:expired`
+  // về 0 thì tự báo hết hạn; POS huỷ đơn rồi gửi giỏ mới sau đó
   useEffect(() => {
     if (remaining <= 0) dispatch({ type: 'payment:expired', orderCode: payment.orderCode });
   }, [remaining, payment.orderCode, dispatch]);

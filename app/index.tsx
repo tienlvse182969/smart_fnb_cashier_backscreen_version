@@ -4,11 +4,12 @@ import { View } from 'react-native';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 
 import { CartScreen } from '@/src/components/display/cart-screen';
-import { DemoBar } from '@/src/components/display/demo-bar';
 import { IdleScreen } from '@/src/components/display/idle-screen';
+import { OfflineBadge } from '@/src/components/display/offline-badge';
 import { PairedScreen, PairingScreen } from '@/src/components/display/pairing-screen';
 import { QrScreen } from '@/src/components/display/qr-screen';
 import { ExpiredScreen, PaidScreen } from '@/src/components/display/status-screens';
+import { UnpairGesture } from '@/src/components/display/unpair-gesture';
 import { useDisplay } from '@/src/display/display-store';
 import { usePairing } from '@/src/pairing/pairing-store';
 
@@ -51,7 +52,8 @@ export default function CustomerDisplay() {
         {screenKey === 'expired' ? <ExpiredScreen /> : null}
         {screenKey === 'paid' && state.paid ? <PaidScreen paid={state.paid} /> : null}
       </Animated.View>
-      <DemoBar />
+      <OfflineBadge />
+      <UnpairGesture />
     </View>
   );
 }

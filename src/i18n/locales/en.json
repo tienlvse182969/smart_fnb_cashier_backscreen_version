@@ -33,22 +33,6 @@
       "hint": "Please wait for your number to be called.",
       "amount": "Paid {{amount}}"
     },
-    "demo": {
-      "title": "Demo mode",
-      "addLine": "Add item",
-      "removeLine": "Remove item",
-      "startQr": "Show QR",
-      "expire": "Expire QR",
-      "paid": "Mark paid",
-      "cancel": "Cancel QR",
-      "clear": "Clear cart",
-      "close": "Hide",
-      "posEntersCode": "POS enters code",
-      "expireCode": "Expire code",
-      "goOffline": "Go offline",
-      "goOnline": "Back online",
-      "revoke": "Revoke display"
-    },
     "pairing": {
       "title": "Pair this display with a counter",
       "subtitle": "Enter the code below on the cashier's POS",
@@ -64,6 +48,13 @@
       "note": "Each code works once and changes every 5 minutes. Once paired, reopening the app keeps the pairing.",
       "successTitle": "Paired successfully",
       "successHint": "Switching to the standby screen…"
-    }
+    },
+    "unpair": {
+      "title": "Unpair this display?",
+      "message": "The display will leave {{station}} · {{branch}} and show a new pairing code. The cashier must enter it on the POS to pair again.",
+      "cancel": "Cancel",
+      "confirm": "Unpair"
+    },
+    "offline": "Offline"
   }
 }

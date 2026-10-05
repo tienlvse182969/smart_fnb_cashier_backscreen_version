@@ -41,7 +41,7 @@ export function PaidScreen({ paid }: { paid: PaidInfo }) {
   const { dispatch } = useDisplay();
 
   useEffect(() => {
-    const id = setTimeout(() => dispatch({ type: 'cart:clear' }), PAID_HOLD_MS);
+    const id = setTimeout(() => dispatch({ type: 'paid:dismiss' }), PAID_HOLD_MS);
     return () => clearTimeout(id);
   }, [paid.orderCode, dispatch]);
 
@@ -52,12 +52,16 @@ export function PaidScreen({ paid }: { paid: PaidInfo }) {
       <Txt color={fg} style={{ fontFamily: fontFamily.black, fontSize: s(52), lineHeight: s(62) }}>
         {t('display.paid.title')}
       </Txt>
-      <Txt color={fg} muted style={{ fontSize: s(24), lineHeight: s(32), marginTop: s(24) }}>
-        {t('display.paid.callNumber')}
-      </Txt>
-      <Txt color={fg} style={{ fontFamily: fontFamily.black, fontSize: s(220), lineHeight: s(240) }}>
-        {String(paid.callNumber).padStart(3, '0')}
-      </Txt>
+      {paid.callNumber !== undefined ? (
+        <>
+          <Txt color={fg} muted style={{ fontSize: s(24), lineHeight: s(32), marginTop: s(24) }}>
+            {t('display.paid.callNumber')}
+          </Txt>
+          <Txt color={fg} style={{ fontFamily: fontFamily.black, fontSize: s(220), lineHeight: s(240) }}>
+            {String(paid.callNumber).padStart(3, '0')}
+          </Txt>
+        </>
+      ) : null}
       <Txt color={fg} muted style={{ fontSize: s(22), lineHeight: s(30) }}>
         {t('display.paid.hint')}
       </Txt>

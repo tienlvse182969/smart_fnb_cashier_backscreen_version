@@ -33,22 +33,6 @@
       "hint": "Vui lòng chờ nhận món khi nghe gọi số.",
       "amount": "Đã thanh toán {{amount}}"
     },
-    "demo": {
-      "title": "Chế độ demo",
-      "addLine": "Thêm món",
-      "removeLine": "Bớt món",
-      "startQr": "Hiện QR",
-      "expire": "Hết hạn QR",
-      "paid": "Đã trả tiền",
-      "cancel": "Huỷ QR",
-      "clear": "Xoá giỏ",
-      "close": "Ẩn",
-      "posEntersCode": "POS nhập đúng mã",
-      "expireCode": "Mã hết hạn",
-      "goOffline": "Mất mạng",
-      "goOnline": "Có mạng lại",
-      "revoke": "Thu hồi màn hình"
-    },
     "pairing": {
       "title": "Ghép màn hình với quầy",
       "subtitle": "Nhập mã dưới đây trên máy POS của thu ngân",
@@ -64,6 +48,13 @@
       "note": "Mã chỉ dùng một lần và tự đổi sau 5 phút. Ghép xong, mở lại ứng dụng không cần ghép lại.",
       "successTitle": "Đã ghép thành công",
       "successHint": "Màn hình sẽ chuyển sang chế độ chờ…"
-    }
+    },
+    "unpair": {
+      "title": "Xoá ghép màn hình này?",
+      "message": "Màn hình sẽ rời {{station}} · {{branch}} và hiện mã ghép mới. Thu ngân cần nhập lại mã trên POS để ghép lại.",
+      "cancel": "Huỷ",
+      "confirm": "Xoá ghép"
+    },
+    "offline": "Mất kết nối máy chủ"
   }
 }
