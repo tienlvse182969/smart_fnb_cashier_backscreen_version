@@ -11,22 +11,25 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
-import { posters } from '@/src/display/mock';
-
-const ROTATE_MS = 8000;
+import { usePosters } from '@/src/display/station-sync';
 
 /**
- * Áp phích/khuyến mãi xoay vòng, lấp đầy khung cha. Ảnh luôn hiện nguyên khổ (không cắt chữ trên
- * áp phích); phần thừa lấp bằng chính ảnh đó làm mờ. `bottomInset` chừa chỗ cho thanh phủ phía dưới.
+ * Áp phích/khuyến mãi của chuỗi xoay vòng (mỗi áp phích hiện đúng thời lượng Owner đặt), lấp đầy khung cha. Ảnh luôn
+ * hiện nguyên khổ (không cắt chữ trên áp phích); phần thừa lấp bằng chính ảnh đó làm mờ. `bottomInset` chừa chỗ cho
+ * thanh phủ phía dưới.
  */
 export function PosterSlideshow({ bottomInset = 0 }: { bottomInset?: number }) {
+  const posters = usePosters();
   const [index, setIndex] = useState(0);
+  // danh sách đổi độ dài (Owner thêm/xoá áp phích) thì vị trí tự quy về trong khoảng hợp lệ
+  const slot = index % posters.length;
+  const poster = posters[slot];
 
   useEffect(() => {
     if (posters.length < 2) return;
-    const id = setInterval(() => setIndex((i) => (i + 1) % posters.length), ROTATE_MS);
-    return () => clearInterval(id);
-  }, []);
+    const id = setTimeout(() => setIndex((slot + 1) % posters.length), poster.durationMs);
+    return () => clearTimeout(id);
+  }, [slot, poster.id, poster.durationMs, posters.length]);
 
   // một áp phích duy nhất thì phóng nhẹ chậm để màn hình không "chết"
   const zoom = useSharedValue(1);
@@ -35,8 +38,6 @@ export function PosterSlideshow({ bottomInset = 0 }: { bottomInset?: number }) {
   }, [zoom]);
   const zoomStyle = useAnimatedStyle(() => ({ transform: [{ scale: zoom.value }] }));
 
-  const poster = posters[index % posters.length];
-
   return (
     <View style={styles.root}>
       <Animated.View
@@ -44,7 +45,13 @@ export function PosterSlideshow({ bottomInset = 0 }: { bottomInset?: number }) {
         entering={FadeIn.duration(900)}
         exiting={FadeOut.duration(900)}
         style={StyleSheet.absoluteFill}>
-        <Image source={poster.source} style={StyleSheet.absoluteFill} contentFit="cover" blurRadius={36} />
+        <Image
+          source={poster.source}
+          style={StyleSheet.absoluteFill}
+          contentFit="cover"
+          blurRadius={36}
+          cachePolicy="memory-disk"
+        />
         <View style={styles.dim} />
       </Animated.View>
 
@@ -54,7 +61,7 @@ export function PosterSlideshow({ bottomInset = 0 }: { bottomInset?: number }) {
           entering={FadeIn.duration(900)}
           exiting={FadeOut.duration(900)}
           style={[styles.fill, zoomStyle]}>
-          <Image source={poster.source} style={styles.fill} contentFit="contain" />
+          <Image source={poster.source} style={styles.fill} contentFit="contain" cachePolicy="memory-disk" />
         </Animated.View>
       </View>
     </View>

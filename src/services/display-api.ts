@@ -32,10 +32,24 @@ export type DisplayBranding = {
   accentColor: string;
 };
 
+/**
+ * Áp phích Owner cấu hình cho cả chuỗi. Backend chỉ trả cái đang bật, đã xếp đúng thứ tự xoay vòng.
+ * `imageUrl` là đường dẫn tương đối `/uploads/posters/...` (nằm ngoài `/api/v1`).
+ */
+export type DisplayPosterDto = {
+  id: string;
+  title: string;
+  imageUrl: string;
+  /** thời gian hiện trước khi chuyển ảnh kế, 3–60 giây */
+  durationSeconds: number;
+};
+
 export type DisplayContext = {
   station: { id: string; name: string };
   branch: { id: string; name: string };
   currency: string;
+  /** không có ở backend cũ → giữ danh sách đang có; mảng rỗng = Owner chưa bật áp phích nào */
+  posters?: DisplayPosterDto[];
   branding: DisplayBranding;
   /** số phiên bản giỏ do server cấp theo quầy (BR-46) */
   version: number;
