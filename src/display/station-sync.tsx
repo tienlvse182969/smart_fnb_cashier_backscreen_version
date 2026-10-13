@@ -5,8 +5,12 @@ import { usePairedDevice, usePairing } from '@/src/pairing/pairing-store';
 import { fetchDisplayContext } from '@/src/services/display-api';
 import { connectStation } from '@/src/services/display-realtime';
 import { useDisplay } from './display-store';
+import { fallbackPosters, samePosters, toDisplayPosters, type DisplayPoster } from './posters';
 
-/** Backend không báo khi Manager thu hồi màn hình → định kỳ hỏi lại để tự gỡ khỏi quầy. */
+/**
+ * Backend không báo khi Manager thu hồi màn hình, cũng không đẩy khi Owner đổi áp phích → định kỳ hỏi lại để tự gỡ khỏi
+ * quầy và cập nhật áp phích (tối đa chậm chừng này).
+ */
 const VERIFY_MS = 60_000;
 /** Mất kết nối quá ngần này mới hiện nhãn, tránh nháy khi socket nối lại nhanh. */
 const OFFLINE_NOTICE_MS = 5_000;
@@ -19,18 +23,19 @@ const isRejected = (reason: unknown) =>
   reason instanceof ApiError &&
   (reason.status === 403 || (reason.status === 404 && /station/i.test(reason.message)));
 
-const StationSyncContext =createContext<{ offline: boolean }>({ offline: false });
+const StationSyncContext = createContext<{ offline: boolean; posters: DisplayPoster[] }>({ offline: false, posters: [] });
 
 /**
  * Đồng bộ màn hình khách với quầy đã ghép (11.11): tải trạng thái hiện tại từ server, nghe
  * Socket.IO để cập nhật tức thì, tải lại mỗi lần nối lại (thay cho `station:sync`).
- * Token bị từ chối (403/404) → gỡ ghép, quay về màn hình xin mã.
+ * Token bị từ chối (403/404) → gỡ ghép, quay về màn hình xin mã. Mỗi lần tải cũng lấy danh sách áp phích của chuỗi.
  */
 export function StationSyncProvider({ children }: { children: ReactNode }) {
   const device = usePairedDevice();
   const { revoke } = usePairing();
   const { dispatch } = useDisplay();
   const [offline, setOffline] = useState(false);
+  const [posters, setPosters] = useState<DisplayPoster[]>([]);
   const token = device?.token;
 
   useEffect(() => {
@@ -49,7 +54,13 @@ export function StationSyncProvider({ children }: { children: ReactNode }) {
     const load = async () => {
       try {
         const context = await fetchDisplayContext(token);
-        if (active) dispatch({ type: 'display:snapshot', version: context.version, snapshot: context.snapshot });
+        if (!active) return;
+        dispatch({ type: 'display:snapshot', version: context.version, snapshot: context.snapshot });
+        // backend cũ chưa có `posters` → giữ danh sách đang có; nếu cùng nội dung thì giữ nguyên để vòng xoay không bị đặt lại
+        if (context.posters) {
+          const next = toDisplayPosters(context.posters);
+          setPosters((prev) => (samePosters(prev, next) ? prev : next));
+        }
       } catch (reason) {
         if (!active) return;
         if (isRejected(reason)) void revoke();
@@ -58,6 +69,7 @@ export function StationSyncProvider({ children }: { children: ReactNode }) {
     };
 
     dispatch({ type: 'display:reset' });
+    setPosters([]);
     setOffline(false);
     markOffline();
     void load();
@@ -83,10 +95,16 @@ export function StationSyncProvider({ children }: { children: ReactNode }) {
     };
   }, [token, dispatch, revoke]);
 
-  const value = useMemo(() => ({ offline: !!token && offline }), [token, offline]);
+  const value = useMemo(() => ({ offline: !!token && offline, posters }), [token, offline, posters]);
   return <StationSyncContext.Provider value={value}>{children}</StationSyncContext.Provider>;
 }
 
 export function useStationSync() {
   return useContext(StationSyncContext);
+}
+
+/** Áp phích để xoay vòng: của chuỗi nếu Owner đã bật, không thì áp phích có sẵn trong app (luôn có ít nhất một). */
+export function usePosters(): DisplayPoster[] {
+  const { posters } = useContext(StationSyncContext);
+  return posters.length > 0 ? posters : fallbackPosters;
 }
