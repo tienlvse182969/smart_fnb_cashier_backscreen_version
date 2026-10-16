@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "smart_fnb_backscreen",
+    "name": "Smart F&B Backscreen",
     "slug": "smart_fnb_backscreen",
-    "version": "1.0.0",
+    "version": "0.1.0",
     "orientation": "landscape",
     "icon": "./assets/images/icon.png",
     "scheme": "smartfnbbackscreen",
@@ -19,6 +19,7 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "edgeToEdgeEnabled": true,
+      "package": "com.smartfnb.backscreen",
       "predictiveBackGestureEnabled": false
     },
     "web": {
@@ -54,6 +55,12 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "bb3ce9f7-be02-4477-b6c0-dae6a77de8eb"
+      }
     }
   }
 }
