@@ -24,6 +24,7 @@ export function PosterSlideshow({ bottomInset = 0 }: { bottomInset?: number }) {
   // danh sách đổi độ dài (Owner thêm/xoá áp phích) thì vị trí tự quy về trong khoảng hợp lệ
   const slot = index % posters.length;
   const poster = posters[slot];
+  const fit = poster.fit ?? 'contain';
 
   useEffect(() => {
     if (posters.length < 2) return;
@@ -40,20 +41,22 @@ export function PosterSlideshow({ bottomInset = 0 }: { bottomInset?: number }) {
 
   return (
     <View style={styles.root}>
-      <Animated.View
-        key={`bg-${poster.id}`}
-        entering={FadeIn.duration(900)}
-        exiting={FadeOut.duration(900)}
-        style={StyleSheet.absoluteFill}>
-        <Image
-          source={poster.source}
-          style={StyleSheet.absoluteFill}
-          contentFit="cover"
-          blurRadius={36}
-          cachePolicy="memory-disk"
-        />
-        <View style={styles.dim} />
-      </Animated.View>
+      {fit === 'contain' ? (
+        <Animated.View
+          key={`bg-${poster.id}`}
+          entering={FadeIn.duration(900)}
+          exiting={FadeOut.duration(900)}
+          style={StyleSheet.absoluteFill}>
+          <Image
+            source={poster.source}
+            style={StyleSheet.absoluteFill}
+            contentFit="cover"
+            blurRadius={36}
+            cachePolicy="memory-disk"
+          />
+          <View style={styles.dim} />
+        </Animated.View>
+      ) : null}
 
       <View style={[styles.posterArea, { paddingBottom: bottomInset }]}>
         <Animated.View
@@ -61,7 +64,7 @@ export function PosterSlideshow({ bottomInset = 0 }: { bottomInset?: number }) {
           entering={FadeIn.duration(900)}
           exiting={FadeOut.duration(900)}
           style={[styles.fill, zoomStyle]}>
-          <Image source={poster.source} style={styles.fill} contentFit="contain" cachePolicy="memory-disk" />
+          <Image source={poster.source} style={styles.fill} contentFit={fit} cachePolicy="memory-disk" />
         </Animated.View>
       </View>
     </View>

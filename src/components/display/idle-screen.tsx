@@ -13,12 +13,13 @@ const paper = '#FFFFFF';
 
 /** Màn hình chờ — lúc không có khách: áp phích/khuyến mãi xoay vòng toàn màn hình. */
 export function IdleScreen() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { s } = useScale();
   const device = usePairedDevice();
   const now = useNow(1000);
-  const clock = new Date(now).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
-  const date = new Date(now).toLocaleDateString('vi-VN', {
+  const locale = i18n.language?.startsWith('en') ? 'en-GB' : 'vi-VN';
+  const clock = new Date(now).toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' });
+  const date = new Date(now).toLocaleDateString(locale, {
     weekday: 'long',
     day: '2-digit',
     month: '2-digit',

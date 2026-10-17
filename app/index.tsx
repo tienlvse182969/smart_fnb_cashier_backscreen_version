@@ -9,7 +9,7 @@ import { OfflineBadge } from '@/src/components/display/offline-badge';
 import { PairedScreen, PairingScreen } from '@/src/components/display/pairing-screen';
 import { QrScreen } from '@/src/components/display/qr-screen';
 import { ExpiredScreen, PaidScreen } from '@/src/components/display/status-screens';
-import { UnpairGesture } from '@/src/components/display/unpair-gesture';
+import { DisplayMenu } from '@/src/components/display/display-menu';
 import { useDisplay } from '@/src/display/display-store';
 import { usePairing } from '@/src/pairing/pairing-store';
 
@@ -53,7 +53,7 @@ export default function CustomerDisplay() {
         {screenKey === 'paid' && state.paid ? <PaidScreen paid={state.paid} /> : null}
       </Animated.View>
       <OfflineBadge />
-      <UnpairGesture />
+      <DisplayMenu />
     </View>
   );
 }

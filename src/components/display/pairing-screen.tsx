@@ -1,3 +1,4 @@
+import Constants from 'expo-constants';
 import { Image } from 'expo-image';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
@@ -11,6 +12,7 @@ import { fontFamily } from '@/src/theme/typography';
 import { useAppTheme } from '@/src/theme/use-theme';
 import { Icon } from '../ui/icon';
 import { Txt } from '../ui/txt';
+import { LanguageToggle } from './language-toggle';
 
 const mmss = (ms: number) => {
   const total = Math.max(0, Math.ceil(ms / 1000));
@@ -18,6 +20,8 @@ const mmss = (ms: number) => {
 };
 
 const STEPS = ['step1', 'step2', 'step3'] as const;
+
+const APP_VERSION = Constants.expoConfig?.version;
 
 /** Sáu ô số cỡ lớn, tách 3 + 3 để thu ngân đọc từ xa. Chưa có mã thì hiện ô trống. */
 function CodeBoxes({ code }: { code?: string }) {
@@ -66,8 +70,17 @@ export function PairingScreen({ state }: { state: Extract<PairingState, { status
   const fg = theme.color_text_base_inverse;
 
   return (
-    <View style={[styles.root, { backgroundColor: theme.fill_body }]}>
+    <View style={[styles.root, { backgroundColor: '#1E2D3B' }]}>
+      <Image
+        source={require('../../../assets/images/pairing-screen-background.jpg')}
+        style={StyleSheet.absoluteFill}
+        contentFit="cover"
+      />
       <View style={[styles.left, { padding: s(48), gap: s(32) }]}>
+        <View style={[styles.lang, { top: s(24), right: s(24) }]}>
+          <LanguageToggle color={fg} />
+        </View>
+
         {state.revoked ? (
           <View style={[styles.notice, { paddingHorizontal: s(20), paddingVertical: s(12), borderRadius: s(10), gap: s(10) }]}>
             <Icon name="monitor" size={s(22)} color={fg} />
@@ -79,12 +92,12 @@ export function PairingScreen({ state }: { state: Extract<PairingState, { status
 
         <View style={{ alignItems: 'center', gap: s(10) }}>
           <View style={[styles.row, { gap: s(14) }]}>
-            <Icon name="link" size={s(36)} />
-            <Txt style={{ fontFamily: fontFamily.black, fontSize: s(38), lineHeight: s(46) }}>
+            <Icon name="link" size={s(36)} color={fg} />
+            <Txt color={fg} style={{ fontFamily: fontFamily.black, fontSize: s(38), lineHeight: s(46) }}>
               {t('display.pairing.title')}
             </Txt>
           </View>
-          <Txt muted style={{ fontSize: s(20), lineHeight: s(28) }}>
+          <Txt color={fg} muted style={{ fontSize: s(20), lineHeight: s(28) }}>
             {t('display.pairing.subtitle')}
           </Txt>
         </View>
@@ -95,36 +108,42 @@ export function PairingScreen({ state }: { state: Extract<PairingState, { status
           {code ? (
             <>
               <View style={[styles.row, { gap: s(10) }]}>
-                <Icon name="timer" size={s(22)} />
-                <Txt style={{ fontSize: s(19), lineHeight: s(26) }}>
+                <Icon name="timer" size={s(22)} color={fg} />
+                <Txt color={fg} style={{ fontSize: s(19), lineHeight: s(26) }}>
                   {t('display.pairing.expiresIn', { time: mmss(remaining) })}
                 </Txt>
               </View>
-              <View style={[styles.track, { width: s(420), height: s(6), backgroundColor: theme.border_color_thin }]}>
-                <View style={{ width: `${progress * 100}%`, height: '100%', backgroundColor: theme.color_text_base }} />
+              <View style={[styles.track, { width: s(420), height: s(6), backgroundColor: 'rgba(255,255,255,0.3)' }]}>
+                <View style={{ width: `${progress * 100}%`, height: '100%', backgroundColor: fg }} />
               </View>
             </>
           ) : state.offline ? (
             <Animated.View entering={FadeIn.duration(250)} style={{ alignItems: 'center', gap: s(6) }}>
               <View style={[styles.row, { gap: s(10) }]}>
-                <Icon name="offline" size={s(24)} />
-                <Txt style={{ fontFamily: fontFamily.bold, fontSize: s(20), lineHeight: s(28) }}>
+                <Icon name="offline" size={s(24)} color={fg} />
+                <Txt color={fg} style={{ fontFamily: fontFamily.bold, fontSize: s(20), lineHeight: s(28) }}>
                   {t('display.pairing.offline')}
                 </Txt>
               </View>
-              <Txt muted style={{ fontSize: s(17), lineHeight: s(24) }}>
+              <Txt color={fg} muted style={{ fontSize: s(17), lineHeight: s(24) }}>
                 {t('display.pairing.retrying')}
               </Txt>
             </Animated.View>
           ) : (
             <View style={[styles.row, { gap: s(12) }]}>
-              <ActivityIndicator color={theme.color_text_base} />
-              <Txt muted style={{ fontSize: s(19), lineHeight: s(26) }}>
+              <ActivityIndicator color={fg} />
+              <Txt color={fg} muted style={{ fontSize: s(19), lineHeight: s(26) }}>
                 {t('display.pairing.requesting')}
               </Txt>
             </View>
           )}
         </View>
+
+        {APP_VERSION ? (
+          <Txt color={fg} muted style={[styles.version, { bottom: s(24), fontSize: s(14), lineHeight: s(20) }]}>
+            {t('display.pairing.version', { version: APP_VERSION })}
+          </Txt>
+        ) : null}
       </View>
 
       <View style={[styles.right, { width: '36%', padding: s(48), gap: s(36) }]}>
@@ -189,6 +208,8 @@ const styles = StyleSheet.create({
   root: { flex: 1, flexDirection: 'row' },
   left: { flex: 1, alignItems: 'center', justifyContent: 'center' },
   right: { backgroundColor: '#0A0A0A', justifyContent: 'center' },
+  version: { position: 'absolute', alignSelf: 'center' },
+  lang: { position: 'absolute' },
   row: { flexDirection: 'row', alignItems: 'center' },
   box: { borderWidth: 3, alignItems: 'center', justifyContent: 'center', backgroundColor: '#FFFFFF' },
   track: { borderRadius: 999, overflow: 'hidden' },

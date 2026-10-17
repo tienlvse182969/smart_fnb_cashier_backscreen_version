@@ -3,6 +3,7 @@ import {
   CircleCheck,
   Clock,
   CupSoda,
+  Globe,
   Hourglass,
   Link2,
   MonitorCheck,
@@ -13,6 +14,7 @@ import {
   ShoppingBag,
   Smartphone,
   Timer,
+  Unlink,
   UtensilsCrossed,
   WifiOff,
   type LucideIcon,
@@ -37,6 +39,8 @@ export const Icons = {
   monitor: MonitorSmartphone,
   paired: MonitorCheck,
   offline: WifiOff,
+  globe: Globe,
+  unpair: Unlink,
 } satisfies Record<string, LucideIcon>;
 
 export type IconName = keyof typeof Icons;
