@@ -46,6 +46,7 @@
       "step2": "Nhập mã 6 số đang hiện trên màn hình này",
       "step3": "Màn hình tự kết nối với quầy — không cần đăng nhập trên máy này",
       "note": "Mã chỉ dùng một lần và tự đổi sau 5 phút. Ghép xong, mở lại ứng dụng không cần ghép lại.",
+      "version": "Phiên bản {{version}}",
       "successTitle": "Đã ghép thành công",
       "successHint": "Màn hình sẽ chuyển sang chế độ chờ…"
     },
