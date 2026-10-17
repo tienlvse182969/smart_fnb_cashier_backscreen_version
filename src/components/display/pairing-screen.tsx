@@ -12,6 +12,7 @@ import { fontFamily } from '@/src/theme/typography';
 import { useAppTheme } from '@/src/theme/use-theme';
 import { Icon } from '../ui/icon';
 import { Txt } from '../ui/txt';
+import { LanguageToggle } from './language-toggle';
 
 const mmss = (ms: number) => {
   const total = Math.max(0, Math.ceil(ms / 1000));
@@ -76,6 +77,10 @@ export function PairingScreen({ state }: { state: Extract<PairingState, { status
         contentFit="cover"
       />
       <View style={[styles.left, { padding: s(48), gap: s(32) }]}>
+        <View style={[styles.lang, { top: s(24), right: s(24) }]}>
+          <LanguageToggle color={fg} />
+        </View>
+
         {state.revoked ? (
           <View style={[styles.notice, { paddingHorizontal: s(20), paddingVertical: s(12), borderRadius: s(10), gap: s(10) }]}>
             <Icon name="monitor" size={s(22)} color={fg} />
@@ -204,6 +209,7 @@ const styles = StyleSheet.create({
   left: { flex: 1, alignItems: 'center', justifyContent: 'center' },
   right: { backgroundColor: '#0A0A0A', justifyContent: 'center' },
   version: { position: 'absolute', alignSelf: 'center' },
+  lang: { position: 'absolute' },
   row: { flexDirection: 'row', alignItems: 'center' },
   box: { borderWidth: 3, alignItems: 'center', justifyContent: 'center', backgroundColor: '#FFFFFF' },
   track: { borderRadius: 999, overflow: 'hidden' },

@@ -47,6 +47,7 @@
       "step3": "Màn hình tự kết nối với quầy — không cần đăng nhập trên máy này",
       "note": "Mã chỉ dùng một lần và tự đổi sau 5 phút. Ghép xong, mở lại ứng dụng không cần ghép lại.",
       "version": "Phiên bản {{version}}",
+      "language": "Đổi ngôn ngữ",
       "successTitle": "Đã ghép thành công",
       "successHint": "Màn hình sẽ chuyển sang chế độ chờ…"
     },
@@ -56,6 +57,14 @@
       "cancel": "Huỷ",
       "confirm": "Xoá ghép"
     },
-    "offline": "Mất kết nối máy chủ"
+    "offline": "Mất kết nối máy chủ",
+    "menu": {
+      "title": "Menu màn hình",
+      "hint": "Chạm giữ góc trên bên trái 3 giây để mở menu",
+      "language": "Ngôn ngữ hiển thị",
+      "unpair": "Xoá ghép đôi",
+      "unpairDesc": "Gỡ màn hình khỏi quầy hiện tại",
+      "close": "Đóng"
+    }
   }
 }

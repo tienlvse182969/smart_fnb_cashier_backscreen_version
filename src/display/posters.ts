@@ -8,6 +8,8 @@ export type DisplayPoster = {
   source: ImageSource | number;
   /** thời gian hiện trước khi chuyển ảnh kế */
   durationMs: number;
+  /** `contain` (mặc định): hiện nguyên khổ, không cắt chữ trên áp phích. `cover`: phủ kín khung, dùng cho ảnh nền không có chữ. */
+  fit?: 'contain' | 'cover';
 };
 
 const DEFAULT_SECONDS = 8;
@@ -20,6 +22,8 @@ export const fallbackPosters: DisplayPoster[] = [
     id: 'default',
     source: require('../../assets/images/apphichmau.jpg'),
     durationMs: DEFAULT_SECONDS * 1000,
+    // ảnh tỉ lệ 3:2, không khớp khung màn hình quầy → phủ kín thay vì để viền mờ hai bên
+    fit: 'cover',
   },
 ];
 
