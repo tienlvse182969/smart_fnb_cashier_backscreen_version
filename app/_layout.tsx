@@ -13,6 +13,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import '@/src/i18n';
 import { AppSplash } from '@/src/components/app-splash';
+import { BrandProvider } from '@/src/branding/brand-context';
 import { DisplayProvider } from '@/src/display/display-store';
 import { StationSyncProvider } from '@/src/display/station-sync';
 import { PairingProvider } from '@/src/pairing/pairing-store';
@@ -45,26 +46,28 @@ export default function RootLayout() {
         <AppThemeContext.Provider value={appLightTheme}>
           <AntdProvider theme={appLightTheme}>
             <PairingProvider>
-              <DisplayProvider>
-                <StationSyncProvider>
-                  <Stack
-                    screenOptions={{
-                      headerShown: false,
-                      contentStyle: { backgroundColor: appLightTheme.fill_body },
-                    }}>
-                    <Stack.Screen name="index" />
-                  </Stack>
-                  <StatusBar hidden />
-                  {minElapsed ? null : (
-                    <Animated.View
-                      exiting={FadeOut.duration(400)}
-                      style={StyleSheet.absoluteFill}
-                      pointerEvents="none">
-                      <AppSplash />
-                    </Animated.View>
-                  )}
-                </StationSyncProvider>
-              </DisplayProvider>
+              <BrandProvider>
+                <DisplayProvider>
+                  <StationSyncProvider>
+                    <Stack
+                      screenOptions={{
+                        headerShown: false,
+                        contentStyle: { backgroundColor: appLightTheme.fill_body },
+                      }}>
+                      <Stack.Screen name="index" />
+                    </Stack>
+                    <StatusBar hidden />
+                    {minElapsed ? null : (
+                      <Animated.View
+                        exiting={FadeOut.duration(400)}
+                        style={StyleSheet.absoluteFill}
+                        pointerEvents="none">
+                        <AppSplash />
+                      </Animated.View>
+                    )}
+                  </StationSyncProvider>
+                </DisplayProvider>
+              </BrandProvider>
             </PairingProvider>
           </AntdProvider>
         </AppThemeContext.Provider>

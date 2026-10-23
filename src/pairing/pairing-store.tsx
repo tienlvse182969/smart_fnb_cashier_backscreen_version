@@ -9,7 +9,8 @@ import {
   type ReactNode,
 } from 'react';
 
-import { createPairingCode, fetchDisplayContext } from '@/src/services/display-api';
+import { sameBranding } from '@/src/theme/brand';
+import { createPairingCode, fetchDisplayContext, type DisplayBranding } from '@/src/services/display-api';
 import { clearPairedDevice, loadPairedDevice, savePairedDevice } from './device-storage';
 import type { PairedDevice, PairingEvent, PairingState } from './types';
 
@@ -38,6 +39,8 @@ export function pairingReducer(state: PairingState, event: PairingEvent): Pairin
       return { status: 'paired', device: event.device, justPaired: true };
     case 'pair:settled':
       return state.status === 'paired' ? { ...state, justPaired: false } : state;
+    case 'device:branding':
+      return state.status === 'paired' ? { ...state, device: { ...state.device, branding: event.branding } } : state;
     case 'display:unpaired':
       return unpaired(false);
     case 'display:revoked':
@@ -51,6 +54,8 @@ type Ctx = {
   unpair: () => Promise<void>;
   /** server không nhận token nữa → xoá token, báo "đã được gỡ khỏi quầy" */
   revoke: () => Promise<void>;
+  /** nhận diện chuỗi mới từ server: cập nhật màn hình và lưu lại để mở app lần sau đúng màu ngay */
+  updateBranding: (branding: DisplayBranding) => Promise<void>;
 };
 
 const PairingContext = createContext<Ctx | null>(null);
@@ -150,7 +155,17 @@ export function PairingProvider({ children }: { children: ReactNode }) {
     dispatch({ type: 'display:revoked' });
   }, []);
 
-  const value = useMemo(() => ({ state, unpair, revoke }), [state, unpair, revoke]);
+  const device = state.status === 'paired' ? state.device : null;
+  const updateBranding = useCallback(
+    async (branding: DisplayBranding) => {
+      if (!device || sameBranding(device.branding, branding)) return;
+      dispatch({ type: 'device:branding', branding });
+      await savePairedDevice({ ...device, branding }).catch(() => {});
+    },
+    [device],
+  );
+
+  const value = useMemo(() => ({ state, unpair, revoke, updateBranding }), [state, unpair, revoke, updateBranding]);
   return <PairingContext.Provider value={value}>{children}</PairingContext.Provider>;
 }
 

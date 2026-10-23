@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
+import { createContext, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 
 import { ApiError } from '@/src/lib/api-client';
 import { usePairedDevice, usePairing } from '@/src/pairing/pairing-store';
@@ -32,8 +32,11 @@ const StationSyncContext = createContext<{ offline: boolean; posters: DisplayPos
  */
 export function StationSyncProvider({ children }: { children: ReactNode }) {
   const device = usePairedDevice();
-  const { revoke } = usePairing();
+  const { revoke, updateBranding } = usePairing();
   const { dispatch } = useDisplay();
+  // qua ref để cập nhật nhận diện không làm effect bên dưới chạy lại (sẽ reset màn hình và nối lại socket)
+  const updateBrandingRef = useRef(updateBranding);
+  updateBrandingRef.current = updateBranding;
   const [offline, setOffline] = useState(false);
   const [posters, setPosters] = useState<DisplayPoster[]>([]);
   const token = device?.token;
@@ -56,6 +59,8 @@ export function StationSyncProvider({ children }: { children: ReactNode }) {
         const context = await fetchDisplayContext(token);
         if (!active) return;
         dispatch({ type: 'display:snapshot', version: context.version, snapshot: context.snapshot });
+        // Owner đổi logo/màu chủ đạo → màn hình đổi theo ở lần hỏi lại kế tiếp (tối đa VERIFY_MS)
+        if (context.branding) void updateBrandingRef.current(context.branding);
         // backend cũ chưa có `posters` → giữ danh sách đang có; nếu cùng nội dung thì giữ nguyên để vòng xoay không bị đặt lại
         if (context.posters) {
           const next = toDisplayPosters(context.posters);
