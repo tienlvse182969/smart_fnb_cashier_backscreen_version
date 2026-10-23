@@ -9,9 +9,12 @@ import { useDisplay } from '@/src/display/display-store';
 import type { CartSnapshot, QrPayment } from '@/src/display/types';
 import { useScale } from '@/src/theme/use-scale';
 import { fontFamily } from '@/src/theme/typography';
+import { useBrand } from '@/src/branding/brand-context';
+import { withAlpha } from '@/src/theme/brand';
 import { useAppTheme } from '@/src/theme/use-theme';
 import { Icon } from '../ui/icon';
 import { Txt } from '../ui/txt';
+import { BrandLogo } from './brand-logo';
 
 const mmss = (ms: number) => {
   const total = Math.max(0, Math.ceil(ms / 1000));
@@ -28,6 +31,8 @@ const MAX_SUMMARY_LINES = 4;
  */
 export function QrScreen({ payment, cart }: { payment: QrPayment; cart: CartSnapshot }) {
   const theme = useAppTheme();
+  const brand = useBrand();
+  const onBrand = brand.primaryContrast;
   const { t } = useTranslation();
   const { s, width, height } = useScale();
   const { dispatch } = useDisplay();
@@ -55,6 +60,7 @@ export function QrScreen({ payment, cart }: { payment: QrPayment; cart: CartSnap
           <Txt style={{ fontFamily: fontFamily.black, fontSize: s(38), lineHeight: s(46) }}>
             {t('display.qr.title')}
           </Txt>
+          {brand.custom ? <BrandLogo surface="light" width={s(96)} height={s(38)} /> : null}
         </View>
         <View
           style={[
@@ -75,19 +81,19 @@ export function QrScreen({ payment, cart }: { payment: QrPayment; cart: CartSnap
         </View>
       </View>
 
-      <View style={[styles.right, { width: '40%', padding: s(48), gap: s(24) }]}>
+      <View style={[styles.right, { width: '40%', padding: s(48), gap: s(24), backgroundColor: brand.primary }]}>
         <View style={{ gap: s(6) }}>
-          <Txt color={theme.color_text_base_inverse} muted style={{ fontSize: s(20), lineHeight: s(28) }}>
+          <Txt color={onBrand} muted style={{ fontSize: s(20), lineHeight: s(28) }}>
             {t('display.qr.amount')}
           </Txt>
           <Txt
-            color={theme.color_text_base_inverse}
+            color={onBrand}
             adjustsFontSizeToFit
             numberOfLines={1}
             style={{ fontFamily: fontFamily.black, fontSize: s(72), lineHeight: s(84) }}>
             {formatVnd(payment.amount)}
           </Txt>
-          <Txt color={theme.color_text_base_inverse} muted style={{ fontSize: s(18), lineHeight: s(26) }}>
+          <Txt color={onBrand} muted style={{ fontSize: s(18), lineHeight: s(26) }}>
             {t('display.qr.orderCode', { code: payment.orderCode })}
           </Txt>
         </View>
@@ -100,47 +106,47 @@ export function QrScreen({ payment, cart }: { payment: QrPayment; cart: CartSnap
               borderRadius: s(12),
               gap: s(12),
               backgroundColor: warn ? theme.fill_base : 'transparent',
-              borderColor: theme.fill_base,
+              borderColor: onBrand,
             },
           ]}>
           <View style={[styles.row, { gap: s(10) }]}>
-            <Icon name="timer" size={s(24)} color={warn ? theme.color_text_base : theme.color_text_base_inverse} />
+            <Icon name="timer" size={s(24)} color={warn ? theme.color_text_base : onBrand} />
             <Txt
-              color={warn ? theme.color_text_base : theme.color_text_base_inverse}
+              color={warn ? theme.color_text_base : onBrand}
               style={{ fontSize: s(18), lineHeight: s(26) }}>
               {warn ? t('display.qr.expiringSoon') : t('display.qr.expiresIn')}
             </Txt>
           </View>
           <Txt
-            color={warn ? theme.color_text_base : theme.color_text_base_inverse}
+            color={warn ? theme.color_text_base : onBrand}
             style={{ fontFamily: fontFamily.black, fontSize: s(64), lineHeight: s(72) }}>
             {mmss(remaining)}
           </Txt>
-          <View style={[styles.track, { height: s(6), backgroundColor: warn ? '#D0D0D0' : 'rgba(255,255,255,0.25)' }]}>
+          <View style={[styles.track, { height: s(6), backgroundColor: warn ? '#D0D0D0' : withAlpha(onBrand, 0.25) }]}>
             <View
               style={{
                 width: `${progress * 100}%`,
                 height: '100%',
-                backgroundColor: warn ? theme.color_text_base : theme.fill_base,
+                backgroundColor: warn ? theme.color_text_base : onBrand,
               }}
             />
           </View>
         </View>
 
-        <View style={{ gap: s(8), borderTopWidth: 1, borderTopColor: 'rgba(255,255,255,0.25)', paddingTop: s(18) }}>
+        <View style={{ gap: s(8), borderTopWidth: 1, borderTopColor: withAlpha(onBrand, 0.25), paddingTop: s(18) }}>
           {shown.map((l) => (
             <View key={l.id} style={[styles.row, { justifyContent: 'space-between', gap: s(12) }]}>
-              <Txt color={theme.color_text_base_inverse} numberOfLines={1} style={{ flex: 1, fontSize: s(17), lineHeight: s(24) }}>
+              <Txt color={onBrand} numberOfLines={1} style={{ flex: 1, fontSize: s(17), lineHeight: s(24) }}>
                 {l.qty} × {l.name}
                 {l.sizeLabel ? ` (${l.sizeLabel})` : ''}
               </Txt>
-              <Txt color={theme.color_text_base_inverse} style={{ fontSize: s(17), lineHeight: s(24), fontFamily: fontFamily.medium }}>
+              <Txt color={onBrand} style={{ fontSize: s(17), lineHeight: s(24), fontFamily: fontFamily.medium }}>
                 {formatVnd(l.qty * l.unitPrice)}
               </Txt>
             </View>
           ))}
           {hidden > 0 ? (
-            <Txt color={theme.color_text_base_inverse} muted style={{ fontSize: s(15), lineHeight: s(22) }}>
+            <Txt color={onBrand} muted style={{ fontSize: s(15), lineHeight: s(22) }}>
               {t('display.qr.moreLines', { count: hidden })}
             </Txt>
           ) : null}
@@ -153,7 +159,7 @@ export function QrScreen({ payment, cart }: { payment: QrPayment; cart: CartSnap
 const styles = StyleSheet.create({
   root: { flex: 1, flexDirection: 'row' },
   left: { flex: 1, alignItems: 'center', justifyContent: 'center' },
-  right: { backgroundColor: '#0A0A0A', justifyContent: 'center' },
+  right: { justifyContent: 'center' },
   row: { flexDirection: 'row', alignItems: 'center' },
   qrFrame: { backgroundColor: '#FFFFFF', borderWidth: 3 },
   stepNo: { borderWidth: 1.5, borderRadius: 999, alignItems: 'center', justifyContent: 'center' },

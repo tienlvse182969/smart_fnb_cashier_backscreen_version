@@ -31,6 +31,8 @@ export type PairingEvent =
   | { type: 'pair:code'; code: PairingCode }
   | { type: 'pair:success'; device: PairedDevice }
   | { type: 'pair:settled' }
+  /** Owner đổi nhận diện chuỗi → cập nhật bản đã lưu của quầy đang ghép */
+  | { type: 'device:branding'; branding: DisplayBranding }
   /** xoá ghép ngay trên máy này */
   | { type: 'display:unpaired' }
   /** server không nhận token nữa (Manager thu hồi, máy khác ghép vào quầy, quầy ngừng dùng) */

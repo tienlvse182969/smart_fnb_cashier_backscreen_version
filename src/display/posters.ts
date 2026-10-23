@@ -27,8 +27,8 @@ export const fallbackPosters: DisplayPoster[] = [
   },
 ];
 
-/** `/uploads/...` của backend → URL đầy đủ (ảnh nằm ngoài `/api/v1`); URL tuyệt đối giữ nguyên. */
-const absoluteUrl = (url: string) =>
+/** `/uploads/...` của backend → URL đầy đủ (ảnh nằm ngoài `/api/v1`); URL tuyệt đối giữ nguyên. Dùng cho áp phích và logo chuỗi. */
+export const absoluteUrl =(url: string) =>
   /^(https?:|data:)/i.test(url) ? url : `${apiOrigin()}${url.startsWith('/') ? '' : '/'}${url}`;
 
 /** Backend → danh sách hiển thị. Giữ nguyên thứ tự backend đã xếp; bỏ mục thiếu ảnh; ép thời lượng vào 3–60 giây. */

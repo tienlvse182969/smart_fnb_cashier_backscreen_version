@@ -1,4 +1,3 @@
-import { Image } from 'expo-image';
 import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView, StyleSheet, View } from 'react-native';
@@ -8,9 +7,12 @@ import { formatVnd } from '@/src/data/format';
 import type { CartSnapshot, DisplayLine } from '@/src/display/types';
 import { useScale } from '@/src/theme/use-scale';
 import { fontFamily } from '@/src/theme/typography';
+import { useBrand } from '@/src/branding/brand-context';
+import { withAlpha } from '@/src/theme/brand';
 import { useAppTheme } from '@/src/theme/use-theme';
 import { Icon } from '../ui/icon';
 import { Txt } from '../ui/txt';
+import { BrandLogo } from './brand-logo';
 import { PosterSlideshow } from './poster-slideshow';
 
 /**
@@ -95,6 +97,8 @@ export function CartScreen({ cart }: { cart: CartSnapshot }) {
   const theme = useAppTheme();
   const { t } = useTranslation();
   const { s } = useScale();
+  const brand = useBrand();
+  const onBrand = brand.primaryContrast;
   const scroll = useRef<ScrollView>(null);
   const cups = cart.lines.reduce((sum, l) => sum + l.qty, 0);
 
@@ -120,11 +124,7 @@ export function CartScreen({ cart }: { cart: CartSnapshot }) {
           <Txt style={{ flex: 1, fontFamily: fontFamily.black, fontSize: s(32), lineHeight: s(40) }}>
             {t('display.cart.title')}
           </Txt>
-          <Image
-            source={require('../../../assets/logo/logo1.png')}
-            style={{ width: s(96), height: s(38) }}
-            contentFit="contain"
-          />
+          <BrandLogo surface="light" width={s(96)} height={s(38)} />
         </View>
 
         <ScrollView ref={scroll} style={{ flex: 1 }} contentContainerStyle={{ paddingHorizontal: s(32), paddingBottom: s(24) }}>
@@ -133,25 +133,25 @@ export function CartScreen({ cart }: { cart: CartSnapshot }) {
           ))}
         </ScrollView>
 
-        <View style={[styles.summary, { padding: s(32), gap: s(20) }]}>
+        <View style={{ padding: s(32), gap: s(20), backgroundColor: brand.primary }}>
           <View style={{ gap: s(4) }}>
-            <Txt color={theme.color_text_base_inverse} muted style={{ fontSize: s(18), lineHeight: s(26) }}>
+            <Txt color={onBrand} muted style={{ fontSize: s(18), lineHeight: s(26) }}>
               {t('display.cart.total')}
             </Txt>
             <Txt
-              color={theme.color_text_base_inverse}
+              color={onBrand}
               adjustsFontSizeToFit
               numberOfLines={1}
               style={{ fontFamily: fontFamily.black, fontSize: s(60), lineHeight: s(70) }}>
               {formatVnd(cart.total)}
             </Txt>
-            <Txt color={theme.color_text_base_inverse} muted style={{ fontSize: s(16), lineHeight: s(24) }}>
+            <Txt color={onBrand} muted style={{ fontSize: s(16), lineHeight: s(24) }}>
               {t('display.cart.count', { lines: cart.lines.length, cups })}
             </Txt>
           </View>
-          <View style={[styles.hint, { gap: s(12), paddingTop: s(16) }]}>
-            <Icon name="hourglass" size={s(22)} color={theme.color_text_base_inverse} />
-            <Txt color={theme.color_text_base_inverse} muted style={{ flex: 1, fontSize: s(15), lineHeight: s(22) }}>
+          <View style={[styles.hint, { gap: s(12), paddingTop: s(16), borderTopColor: withAlpha(brand.primaryContrast, 0.25) }]}>
+            <Icon name="hourglass" size={s(22)} color={onBrand} />
+            <Txt color={onBrand} muted style={{ flex: 1, fontSize: s(15), lineHeight: s(22) }}>
               {t('display.cart.hint')}
             </Txt>
           </View>
@@ -171,11 +171,9 @@ const styles = StyleSheet.create({
   nameRow: { flexDirection: 'row', alignItems: 'center' },
   sizeTag: { borderWidth: 1.5, borderRadius: 6 },
   right: {},
-  summary: { backgroundColor: '#0A0A0A' },
   hint: {
     flexDirection: 'row',
     alignItems: 'flex-start',
     borderTopWidth: 1,
-    borderTopColor: 'rgba(255,255,255,0.25)',
   },
 });

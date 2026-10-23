@@ -1,21 +1,23 @@
-import { Image } from 'expo-image';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
 import { useNow } from '@/src/data/use-now';
+import { useBrand } from '@/src/branding/brand-context';
 import { usePairedDevice } from '@/src/pairing/pairing-store';
+import { withAlpha } from '@/src/theme/brand';
 import { useScale } from '@/src/theme/use-scale';
 import { fontFamily } from '@/src/theme/typography';
 import { Txt } from '../ui/txt';
+import { BrandLogo } from './brand-logo';
 import { PosterSlideshow } from './poster-slideshow';
-
-const paper = '#FFFFFF';
 
 /** Màn hình chờ — lúc không có khách: áp phích/khuyến mãi xoay vòng toàn màn hình. */
 export function IdleScreen() {
   const { t, i18n } = useTranslation();
   const { s } = useScale();
   const device = usePairedDevice();
+  const brand = useBrand();
+  const paper = brand.primaryContrast;
   const now = useNow(1000);
   const locale = i18n.language?.startsWith('en') ? 'en-GB' : 'vi-VN';
   const clock = new Date(now).toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' });
@@ -29,20 +31,27 @@ export function IdleScreen() {
     <View style={styles.root}>
       <PosterSlideshow bottomInset={s(112)} />
 
-      <View style={[styles.band, { height: s(112), paddingHorizontal: s(40) }]}>
+      <View
+        style={[
+          styles.band,
+          {
+            height: s(112),
+            paddingHorizontal: s(40),
+            backgroundColor: withAlpha(brand.primary, 0.88),
+            borderTopColor: withAlpha(brand.primaryContrast, 0.18),
+          },
+        ]}>
         <View style={styles.bandLeft}>
-          <Image
-            source={require('../../../assets/logo/logo1_white.png')}
-            style={{ width: s(120), height: s(48) }}
-            contentFit="contain"
+          <BrandLogo surface="brand" width={s(120)} height={s(48)} />
+          <View
+            style={[styles.divider, { height: s(40), marginHorizontal: s(24), backgroundColor: withAlpha(brand.primaryContrast, 0.3) }]}
           />
-          <View style={[styles.divider, { height: s(40), marginHorizontal: s(24) }]} />
           <View>
             <Txt style={{ fontFamily: fontFamily.bold, fontSize: s(22), lineHeight: s(28) }} color={paper}>
               {t('display.idle.welcome')}
             </Txt>
             <Txt style={{ fontSize: s(14), lineHeight: s(20) }} color={paper} muted>
-              {device ? `${device.branchName} · ${device.stationName}` : null}
+              {device ? [brand.displayName, device.branchName, device.stationName].filter(Boolean).join(' · ') : null}
             </Txt>
           </View>
         </View>
@@ -69,11 +78,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: 'rgba(10,10,10,0.88)',
     borderTopWidth: 1,
-    borderTopColor: 'rgba(255,255,255,0.18)',
   },
   bandLeft: { flexDirection: 'row', alignItems: 'center' },
   bandRight: { alignItems: 'flex-end' },
-  divider: { width: 1, backgroundColor: 'rgba(255,255,255,0.3)' },
+  divider: { width: 1 },
 });
