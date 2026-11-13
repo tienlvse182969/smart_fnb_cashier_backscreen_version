@@ -3,6 +3,31 @@ import { apiClient } from '@/src/lib/api-client';
 /** Trạng thái màn hình khách do POS gửi — giống hệt `DisplaySnapshot` của app thu ngân. */
 export type DisplaySnapshotState = 'IDLE' | 'CART' | 'PAYMENT_PENDING' | 'PAYMENT_QR' | 'PAID';
 
+/** Tuỳ chọn (trừ size); `isDefault` để chỉ in đậm tuỳ chọn khác mặc định. */
+export type DisplayDetailOption = { label: string; isDefault: boolean };
+/** Topping của một ly/phần, `quantity` tính theo ly. */
+export type DisplayDetailTopping = { name: string; quantity: number };
+
+export type DisplayComboComponentDetail = {
+  name: string;
+  quantity: number;
+  size?: string;
+  options: DisplayDetailOption[];
+  toppings: DisplayDetailTopping[];
+};
+
+/**
+ * Chi tiết có cấu trúc POS gửi kèm (size tách riêng, topping, món trong combo).
+ * POS bản cũ không gửi → chỉ còn `options` dạng chữ.
+ */
+export type DisplayItemDetail = {
+  size?: string;
+  options: DisplayDetailOption[];
+  toppings: DisplayDetailTopping[];
+  /** có khi dòng là combo */
+  components?: DisplayComboComponentDetail[];
+};
+
 export type DisplaySnapshot = {
   state: DisplaySnapshotState;
   items: {
@@ -12,6 +37,7 @@ export type DisplaySnapshot = {
     unitPrice: number;
     lineTotal: number;
     options: string[];
+    detail?: DisplayItemDetail;
     note?: string;
   }[];
   totalAmount: number;
