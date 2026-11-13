@@ -10,7 +10,8 @@
       "total": "Tổng cộng",
       "hint": "Vui lòng kiểm tra lại đơn hàng. Thu ngân sẽ thu tiền sau khi bạn xác nhận.",
       "note": "Ghi chú: {{note}}",
-      "other": "Khác"
+      "other": "Khác",
+      "combo": "Combo"
     },
     "qr": {
       "title": "Quét mã để thanh toán",

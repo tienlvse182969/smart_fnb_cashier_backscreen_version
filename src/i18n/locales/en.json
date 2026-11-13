@@ -10,7 +10,8 @@
       "total": "Total",
       "hint": "Please review your order. The cashier will collect payment once you confirm.",
       "note": "Note: {{note}}",
-      "other": "Other"
+      "other": "Other",
+      "combo": "Combo"
     },
     "qr": {
       "title": "Scan to pay",

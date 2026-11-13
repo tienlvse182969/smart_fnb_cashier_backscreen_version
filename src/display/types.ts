@@ -12,14 +12,33 @@ export type DisplayOption = {
   isDefault: boolean;
 };
 
+/** Topping của một ly/phần, vd. "+Trân châu ×2". */
+export type DisplayTopping = {
+  name: string;
+  qty: number;
+};
+
+/** Một món trong combo, kèm size/tuỳ chọn/topping riêng. */
+export type DisplayComboPart = {
+  name: string;
+  /** số ly/phần của món này trong một combo */
+  qty: number;
+  sizeLabel?: string;
+  options: DisplayOption[];
+  toppings: DisplayTopping[];
+};
+
 export type DisplayLine = {
   id: string;
   name: string;
   sizeLabel?: string;
   qty: number;
-  /** giá một ly đã gồm giá cộng thêm của mọi tuỳ chọn */
+  /** giá một ly đã gồm giá cộng thêm của mọi tuỳ chọn, topping (và phụ thu combo) */
   unitPrice: number;
   options: DisplayOption[];
+  toppings: DisplayTopping[];
+  /** có khi dòng là combo */
+  comboParts?: DisplayComboPart[];
   note?: string;
 };
 
