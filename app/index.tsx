@@ -1,6 +1,6 @@
 import { activateKeepAwakeAsync, deactivateKeepAwake } from 'expo-keep-awake';
 import { useEffect } from 'react';
-import { View } from 'react-native';
+import { Platform, View, type TextStyle, type ViewStyle } from 'react-native';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 
 import { CartScreen } from '@/src/components/display/cart-screen';
@@ -14,6 +14,13 @@ import { useDisplay } from '@/src/display/display-store';
 import { usePairing } from '@/src/pairing/pairing-store';
 
 const KEEP_AWAKE_TAG = 'customer-display';
+
+/**
+ * Màn hình khách chỉ để xem: chặn bôi chọn chữ (web). Giữ góc 3 giây để mở menu rất dễ làm trình duyệt bôi chọn
+ * chữ gần đó; react-native-web thấy `selectionchange` có chữ được chọn là huỷ lần nhấn → menu không bao giờ mở.
+ */
+// `userSelect` chỉ có trong kiểu TextStyle nhưng react-native-web nhận cả trên View
+const NO_TEXT_SELECTION = { userSelect: 'none' } as Pick<TextStyle, 'userSelect'> as ViewStyle;
 
 /**
  * Màn hình phía khách của quầy: một route duy nhất. Chưa ghép thì hiện mã ghép (11.10); đã ghép thì
@@ -36,7 +43,7 @@ export default function CustomerDisplay() {
     pairing.status !== 'paired' ? pairing.status : pairing.justPaired ? 'paired' : state.screen;
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#0A0A0A' }}>
+    <View style={[{ flex: 1, backgroundColor: '#0A0A0A' }, Platform.OS === 'web' && NO_TEXT_SELECTION]}>
       <Animated.View
         key={screenKey}
         entering={FadeIn.duration(350)}
