@@ -10,7 +10,7 @@ import type { DisplayBranding } from '@/src/services/display-api';
 export type BrandTokens = {
   /** Nền các khối "tối" của màn hình (dải đáy màn chờ, tổng tiền, khối QR, màn thanh toán xong). */
   primary: string;
-  /** Màu chữ/biểu tượng trên nền `primary`, chọn để đạt tương phản WCAG AA (BR-43). */
+  /** Màu chữ/biểu tượng trên nền `primary`, luôn đạt tương phản WCAG AA 4.5:1 (BR-43). */
   primaryContrast: string;
   displayName: string;
   /** URL tuyệt đối của logo chuỗi; `undefined` = logo nền tảng. */
@@ -55,9 +55,32 @@ export function contrastRatio(a: string, b: string): number {
   return (Math.max(la, lb) + 0.05) / (Math.min(la, lb) + 0.05);
 }
 
-/** Chữ trắng nếu đạt 4.5:1 trên nền `bg`, ngược lại chữ đen. Không từ chối màu Owner chọn, chỉ tự chỉnh màu chữ. */
-export function pickReadableTextColor(bg: string): '#FFFFFF' | '#000000' {
-  return contrastRatio(bg, '#FFFFFF') >= 4.5 ? '#FFFFFF' : '#000000';
+/** Nhân từng kênh RGB với `factor` (0–1): 1 = giữ nguyên, càng nhỏ càng sẫm. */
+function scaleColor(hex: string, factor: number): string {
+  const channels = toRgb(hex).map((channel) => Math.max(0, Math.min(255, Math.round(channel * factor))));
+  return `#${channels.map((channel) => channel.toString(16).padStart(2, '0')).join('').toUpperCase()}`;
+}
+
+export const LIGHT_INK = '#FFFFFF';
+/** Chữ đậm cho màu chủ đạo quá sáng (vàng…) — cùng giá trị với web. */
+export const DARK_INK = '#1A1206';
+const MIN_RATIO = 4.5;
+/** Làm sẫm mỗi bước 2%, tối đa còn 62% độ sáng. */
+const STEP_PERCENT = 2;
+const FLOOR_PERCENT = 62;
+
+/**
+ * Nền + chữ thương hiệu từ màu chủ đạo — cùng quy tắc với web (`src/theme/brandColor.ts` → `deriveBrandSurface`)
+ * và app Thu ngân/Pha chế. Làm sẫm màu chủ đạo dần tới khi chữ trắng đạt 4.5:1; màu quá sáng không sẫm nổi tới mức
+ * đó (vàng…) thì giữ nguyên và dùng chữ đậm. Tránh chữ đen trên các màu tầm trung (xanh, đỏ, tím, cam) như quy tắc cũ.
+ */
+export function deriveBrandSurface(primary: string): { surface: string; ink: string } {
+  const base = scaleColor(primary, 1);
+  for (let percent = 100; percent >= FLOOR_PERCENT; percent -= STEP_PERCENT) {
+    const candidate = scaleColor(base, percent / 100);
+    if (contrastRatio(candidate, LIGHT_INK) >= MIN_RATIO) return { surface: candidate, ink: LIGHT_INK };
+  }
+  return { surface: base, ink: DARK_INK };
 }
 
 /** `#RRGGBB`/`#RGB` + độ đục 0–1 → `rgba()`. Dùng cho lớp phủ trong suốt theo màu thương hiệu / màu chữ trên thương hiệu. */
@@ -76,9 +99,10 @@ export function resolveBrand(raw: DisplayBranding | null | undefined): BrandToke
   if (!raw || !HEX.test(raw.primaryColor)) return PLATFORM_BRAND;
   const logo = absoluteLogoUrl(raw.logoUrl);
   if (!logo && same(raw.primaryColor, BE_DEFAULT_PRIMARY)) return PLATFORM_BRAND;
+  const { surface, ink } = deriveBrandSurface(raw.primaryColor);
   return {
-    primary: raw.primaryColor,
-    primaryContrast: pickReadableTextColor(raw.primaryColor),
+    primary: surface,
+    primaryContrast: ink,
     displayName: raw.displayName?.trim() ?? '',
     logo,
     custom: true,
