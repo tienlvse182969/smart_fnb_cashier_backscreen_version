@@ -16,6 +16,13 @@
         "buildType": "app-bundle"
       }
     },
+    "beta": {
+      "autoIncrement": true,
+      "environment": "preview",
+      "android": {
+        "buildType": "app-bundle"
+      }
+    },
     "production": {
       "autoIncrement": true,
       "environment": "production",
@@ -30,6 +37,6 @@
         "track": "internal",
         "releaseStatus": "draft"
       }
-"production": {}
+    }
   }
 }
