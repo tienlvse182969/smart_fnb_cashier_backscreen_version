@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { View } from 'react-native';
 
 import { useBrand } from '@/src/branding/brand-context';
+import { LIGHT_INK } from '@/src/theme/brand';
 import { useScale } from '@/src/theme/use-scale';
 
 /**
@@ -32,7 +33,7 @@ export function BrandLogo({ surface, width, height }: { surface: 'light' | 'bran
     );
   }
 
-  const white = surface === 'brand' && brand.primaryContrast === '#FFFFFF';
+  const white = surface === 'brand' && brand.primaryContrast === LIGHT_INK;
   return (
     <Image
       source={white ? require('../../../assets/logo/logo1_white.png') : require('../../../assets/logo/logo1.png')}
